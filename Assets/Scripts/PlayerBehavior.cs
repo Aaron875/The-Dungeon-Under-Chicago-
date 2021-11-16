@@ -13,6 +13,7 @@ public enum PlayerDirection
 public class PlayerBehavior : MonoBehaviour
 {
     public GameObject projectilePrefab;
+    public GameObject fireballPrefab;
 
     private PlayerDirection currentDirection = PlayerDirection.Right;
     private Vector3 velocity = Vector3.zero;
@@ -27,6 +28,9 @@ public class PlayerBehavior : MonoBehaviour
 
     private GameObject projectile;
     private Vector3 projectileVelocity;
+
+    bool basicProjectileActive = true;
+    bool fireBallActive = false;
 
     void Start()
     {
@@ -47,6 +51,20 @@ public class PlayerBehavior : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             shoot();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            basicProjectileActive = true;
+            fireBallActive = false;
+            print("Basic Projectile Now Active");
+        }
+
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            fireBallActive = true;
+            basicProjectileActive = false;
+            print("Fireball now active");
         }
 
         //Move Up
@@ -116,22 +134,22 @@ public class PlayerBehavior : MonoBehaviour
         switch (direction)
         {
             case PlayerDirection.Up:
-                velocity = Vector3.up * .2f;
+                velocity = Vector3.up * .1f;
                 gameObject.transform.position += velocity;
                 break;
 
             case PlayerDirection.Down:
-                velocity = Vector3.up * .2f;
+                velocity = Vector3.up * .1f;
                 gameObject.transform.position -= velocity;
                 break;
 
             case PlayerDirection.Left:
-                velocity = Vector3.right * .2f;
+                velocity = Vector3.right * .1f;
                 gameObject.transform.position -= velocity;
                 break;
 
             case PlayerDirection.Right:
-                velocity = Vector3.right * .2f;
+                velocity = Vector3.right * .1f;
                 gameObject.transform.position += velocity;
                 break;
         }
@@ -143,29 +161,38 @@ public class PlayerBehavior : MonoBehaviour
         switch (currentDirection)
         {
             case PlayerDirection.Up:
-                projectileVelocity = Vector3.up;
+                projectileVelocity = Vector3.up * 0.1f;
                 instantiateSpot = gameObject.transform.position + Vector3.up;
                 break;
 
             case PlayerDirection.Left:
-                projectileVelocity = -Vector3.right;
+                projectileVelocity = -Vector3.right * 0.1f;
                 instantiateSpot = gameObject.transform.position - Vector3.right;
                 break;
 
             case PlayerDirection.Down:
-                projectileVelocity = -Vector3.up;
+                projectileVelocity = -Vector3.up * 0.1f;
                 instantiateSpot = gameObject.transform.position - Vector3.up;
                 break;
 
             case PlayerDirection.Right:
-                projectileVelocity = Vector3.right;
+                projectileVelocity = Vector3.right * 0.1f;
                 instantiateSpot = gameObject.transform.position + Vector3.right;
                 break;
         }
 
+        if(basicProjectileActive)
+        {
+            projectile = Instantiate(projectilePrefab, instantiateSpot, Quaternion.identity);
+            Destroy(projectile, 3.0f);
+        }
+
+        else if(fireBallActive)
+        {
+            projectile = Instantiate(fireballPrefab, instantiateSpot, Quaternion.identity);
+            Destroy(projectile, 0.4f);
+        }
         
-        projectile = Instantiate(projectilePrefab, instantiateSpot, Quaternion.identity);
-        Destroy(projectile, 3.0f);
     }
 
     //Set the velocity vecttor to 0
