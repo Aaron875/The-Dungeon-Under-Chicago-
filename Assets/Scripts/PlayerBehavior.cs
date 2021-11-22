@@ -13,6 +13,7 @@ public enum PlayerDirection
 public class PlayerBehavior : MonoBehaviour
 {
     public GameObject projectilePrefab;
+
     public GameObject fireballPrefab;
 
     private PlayerDirection currentDirection = PlayerDirection.Right;
@@ -36,7 +37,6 @@ public class PlayerBehavior : MonoBehaviour
     {
         playerSprite = gameObject.GetComponent<SpriteRenderer>();
         playerCollider = gameObject.GetComponent<Collider2D>();
-        //playerSprite.color = Color.yellow;
     }
 
     // Update is called once per frame
@@ -57,14 +57,14 @@ public class PlayerBehavior : MonoBehaviour
         {
             basicProjectileActive = true;
             fireBallActive = false;
-            print("Basic Projectile Now Active");
+            //print("Basic Projectile Now Active");
         }
 
         if(Input.GetKeyDown(KeyCode.Alpha2))
         {
             fireBallActive = true;
             basicProjectileActive = false;
-            print("Fireball now active");
+            //print("Fireball now active");
         }
 
         //Move Up
@@ -75,7 +75,6 @@ public class PlayerBehavior : MonoBehaviour
                 currentDirection = PlayerDirection.Up;
             }
             move(currentDirection);
-            //playerSprite.color = Color.black;
         }
         if (Input.GetKeyUp(KeyCode.W))
         {
@@ -90,7 +89,6 @@ public class PlayerBehavior : MonoBehaviour
                 currentDirection = PlayerDirection.Left;
             }
             move(currentDirection);
-            //playerSprite.color = Color.yellow;
         }
         if (Input.GetKeyUp(KeyCode.A))
         {
@@ -105,7 +103,6 @@ public class PlayerBehavior : MonoBehaviour
                 currentDirection = PlayerDirection.Down;
             }
             move(currentDirection);
-            //playerSprite.color = Color.cyan;
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
@@ -120,7 +117,6 @@ public class PlayerBehavior : MonoBehaviour
                 currentDirection = PlayerDirection.Right;
             }
             move(currentDirection);
-            //playerSprite.color = Color.green;
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
@@ -134,22 +130,22 @@ public class PlayerBehavior : MonoBehaviour
         switch (direction)
         {
             case PlayerDirection.Up:
-                velocity = Vector3.up * .1f;
+                velocity = Vector3.up * .5f;
                 gameObject.transform.position += velocity;
                 break;
 
             case PlayerDirection.Down:
-                velocity = Vector3.up * .1f;
+                velocity = Vector3.up * .5f;
                 gameObject.transform.position -= velocity;
                 break;
 
             case PlayerDirection.Left:
-                velocity = Vector3.right * .1f;
+                velocity = Vector3.right * .5f;
                 gameObject.transform.position -= velocity;
                 break;
 
             case PlayerDirection.Right:
-                velocity = Vector3.right * .1f;
+                velocity = Vector3.right * .5f;
                 gameObject.transform.position += velocity;
                 break;
         }
@@ -161,22 +157,22 @@ public class PlayerBehavior : MonoBehaviour
         switch (currentDirection)
         {
             case PlayerDirection.Up:
-                projectileVelocity = Vector3.up * 0.1f;
+                projectileVelocity = Vector3.up * 1f;
                 instantiateSpot = gameObject.transform.position + Vector3.up;
                 break;
 
             case PlayerDirection.Left:
-                projectileVelocity = -Vector3.right * 0.1f;
+                projectileVelocity = -Vector3.right * 1f;
                 instantiateSpot = gameObject.transform.position - Vector3.right;
                 break;
 
             case PlayerDirection.Down:
-                projectileVelocity = -Vector3.up * 0.1f;
+                projectileVelocity = -Vector3.up * 1f;
                 instantiateSpot = gameObject.transform.position - Vector3.up;
                 break;
 
             case PlayerDirection.Right:
-                projectileVelocity = Vector3.right * 0.1f;
+                projectileVelocity = Vector3.right * 1f;
                 instantiateSpot = gameObject.transform.position + Vector3.right;
                 break;
         }
@@ -190,7 +186,19 @@ public class PlayerBehavior : MonoBehaviour
         else if(fireBallActive)
         {
             projectile = Instantiate(fireballPrefab, instantiateSpot, Quaternion.identity);
-            Destroy(projectile, 0.4f);
+            switch (currentDirection) //Change Orientation of the projectile
+            {
+                case PlayerDirection.Up:
+                    projectile.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
+                    break;
+                case PlayerDirection.Down:
+                    projectile.transform.eulerAngles = new Vector3(0.0f, 0.0f, -90.0f);
+                    break;
+                case PlayerDirection.Left:
+                    projectile.transform.eulerAngles = new Vector3(0.0f, 0.0f, 180.0f);
+                    break;
+            }
+            Destroy(projectile, 3.0f);
         }
         
     }
