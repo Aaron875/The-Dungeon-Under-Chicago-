@@ -203,7 +203,7 @@ public class PlayerBehavior : MonoBehaviour
         
     }
 
-    //Set the velocity vecttor to 0
+    //Set the velocity vector to 0
     public void resetVelocity()
     {
         velocity = Vector3.zero;
@@ -218,6 +218,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x < other.bounds.center.x + other.bounds.extents.x)
                 {
                     collidingRight = true;
+                    Debug.Log("Collision Active");
                 }
                 break;
 
@@ -225,6 +226,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x > other.bounds.center.x - other.bounds.extents.x)
                 {
                     collidingLeft = true;
+                    Debug.Log("Collision Active");
                 }
                 break;
 
@@ -232,6 +234,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y > other.bounds.center.y - other.bounds.extents.y)
                 {
                     collidingBottom = true;
+                    Debug.Log("Collision Active");
                 }
                 break;
 
@@ -239,6 +242,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.y - playerCollider.bounds.extents.y < other.bounds.center.y + other.bounds.extents.y)
                 {
                     collidingTop = true;
+                    Debug.Log("Collision Active");
                 }
                 break;
         }
@@ -263,6 +267,6 @@ public class PlayerBehavior : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         ResetCollisions();
-        //Debug.Log("Collisions Reset!");
+        Debug.Log("Collisions Reset!");
     }
 }
