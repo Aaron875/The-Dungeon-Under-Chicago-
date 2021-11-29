@@ -53,6 +53,7 @@ public class PlayerBehavior : MonoBehaviour
             shoot();
         }
 
+        //Switch Projectiles
         if(Input.GetKeyDown(KeyCode.Alpha1))
         {
             basicProjectileActive = true;
@@ -157,22 +158,22 @@ public class PlayerBehavior : MonoBehaviour
         switch (currentDirection)
         {
             case PlayerDirection.Up:
-                projectileVelocity = Vector3.up * 1f;
+                projectileVelocity = Vector3.up * 3f;
                 instantiateSpot = gameObject.transform.position + Vector3.up;
                 break;
 
             case PlayerDirection.Left:
-                projectileVelocity = -Vector3.right * 1f;
+                projectileVelocity = -Vector3.right * 3f;
                 instantiateSpot = gameObject.transform.position - Vector3.right;
                 break;
 
             case PlayerDirection.Down:
-                projectileVelocity = -Vector3.up * 1f;
+                projectileVelocity = -Vector3.up * 3f;
                 instantiateSpot = gameObject.transform.position - Vector3.up;
                 break;
 
             case PlayerDirection.Right:
-                projectileVelocity = Vector3.right * 1f;
+                projectileVelocity = Vector3.right * 3f;
                 instantiateSpot = gameObject.transform.position + Vector3.right;
                 break;
         }
@@ -180,7 +181,7 @@ public class PlayerBehavior : MonoBehaviour
         if(basicProjectileActive)
         {
             projectile = Instantiate(projectilePrefab, instantiateSpot, Quaternion.identity);
-            Destroy(projectile, 3.0f);
+            Destroy(projectile, 2.0f);
         }
 
         else if(fireBallActive)
@@ -218,7 +219,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x < other.bounds.center.x + other.bounds.extents.x)
                 {
                     collidingRight = true;
-                    Debug.Log("Collision Active");
+                    //Debug.Log("Collision Active");
                 }
                 break;
 
@@ -226,7 +227,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x > other.bounds.center.x - other.bounds.extents.x)
                 {
                     collidingLeft = true;
-                    Debug.Log("Collision Active");
+                    //Debug.Log("Collision Active");
                 }
                 break;
 
@@ -234,7 +235,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y > other.bounds.center.y - other.bounds.extents.y)
                 {
                     collidingBottom = true;
-                    Debug.Log("Collision Active");
+                    //Debug.Log("Collision Active");
                 }
                 break;
 
@@ -242,7 +243,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.y - playerCollider.bounds.extents.y < other.bounds.center.y + other.bounds.extents.y)
                 {
                     collidingTop = true;
-                    Debug.Log("Collision Active");
+                    //Debug.Log("Collision Active");
                 }
                 break;
         }
@@ -267,6 +268,6 @@ public class PlayerBehavior : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         ResetCollisions();
-        Debug.Log("Collisions Reset!");
+        //Debug.Log("Collisions Reset!");
     }
 }

@@ -29,6 +29,7 @@ public class EnemyBehavior : MonoBehaviour
         {
             health -= 50;
             print("Projectile hit");
+            Destroy(other.gameObject);
         }
 
         // Reduce enemies health if they get hit by a fireball
@@ -36,6 +37,7 @@ public class EnemyBehavior : MonoBehaviour
         {
             health -= 100;
             print("Fireball hit");
+            Destroy(other.gameObject);
         }
     }
 }
