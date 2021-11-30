@@ -2,21 +2,79 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EnemyDirection
+{
+    Up,
+    Right,
+    Down,
+    Left
+}
+
 public class EnemyBehavior : MonoBehaviour
 {
+
+    [SerializeField]
+    private EnemyDirection currentDirection;
+
+    public GameObject projectilePrefab;
+
+
+    private Vector3 velocity2 = Vector3.zero;
+
+    private SpriteRenderer enemySprite;
+    private Collider2D enemyCollider;
+    private Collider2D playerCollider;
+
+    private bool collidingTop = false;
+    private bool collidingLeft = false;
+    private bool collidingBottom = false;
+    private bool collidingRight = false;
+
+    private GameObject projectile;
+    private Vector3 projectileVelocity;
+
     private int health;
+
+    [SerializeField]
+    private string rangeOrMelee;
+
+    // used to reduce player health
+    [SerializeField]
+    private GameObject player;
+
+    //times the enemies shots
+    float targetTime = 4.0f;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        enemySprite = gameObject.GetComponent<SpriteRenderer>();
+        enemyCollider = gameObject.GetComponent<Collider2D>();
+        playerCollider = player.GetComponent<Collider2D>();
         health = 100;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        // run this code if it is a ranged enemy
+        if (rangeOrMelee == "Ranged")
+        {
+            RangedEnemy();
+            targetTime -= Time.deltaTime;
+
+            if (targetTime <= 0.0f)
+            {
+                Shoot();
+                targetTime = 4.0f;
+                print("shoot");
+            }
+        }
+
         // Destory the enemy if its health reaches 0 or less
-        if(health <= 0)
+        if (health <= 0)
         {
             Destroy(this.gameObject);
         }
@@ -32,12 +90,138 @@ public class EnemyBehavior : MonoBehaviour
             Destroy(other.gameObject);
         }
 
+        if (other.tag == "Player")
+        {
+            health -= 50;
+            // need to reduce player health as well when we have a health system
+        }
+
         // Reduce enemies health if they get hit by a fireball
-        if(other.tag == "Fireball")
+        if (other.tag == "Fireball")
         {
             health -= 100;
             print("Fireball hit");
             Destroy(other.gameObject);
         }
     }
+
+    //The enemy changes direction based on where the player is in relation to it
+    private void ChangeDirection()
+    {
+        switch (currentDirection)
+        {
+
+            case EnemyDirection.Left:
+                if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y < enemyCollider.bounds.center.y - enemyCollider.bounds.extents.y &&
+                    playerCollider.bounds.center.x - playerCollider.bounds.extents.x < enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30 &&
+                    playerCollider.bounds.center.x + playerCollider.bounds.extents.x > enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x - 30)
+                {
+                    currentDirection = EnemyDirection.Down;
+                    print("Looking down");
+                }
+                else if (playerCollider.bounds.center.y - playerCollider.bounds.extents.y > enemyCollider.bounds.center.y + enemyCollider.bounds.extents.y &&
+                    playerCollider.bounds.center.x - playerCollider.bounds.extents.x < enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30 &&
+                    playerCollider.bounds.center.x + playerCollider.bounds.extents.x > enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x - 30)
+                {
+                    currentDirection = EnemyDirection.Up;
+                    print("Looking up");
+                }
+                break;
+
+            case EnemyDirection.Right:
+                if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y < enemyCollider.bounds.center.y - enemyCollider.bounds.extents.y &&
+                    playerCollider.bounds.center.x - playerCollider.bounds.extents.x < enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30 &&
+                    playerCollider.bounds.center.x + playerCollider.bounds.extents.x > enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x - 30)
+                {
+                    currentDirection = EnemyDirection.Down;
+                    print("Looking down");
+                }
+                else if (playerCollider.bounds.center.y - playerCollider.bounds.extents.y > enemyCollider.bounds.center.y + enemyCollider.bounds.extents.y &&
+                    playerCollider.bounds.center.x - playerCollider.bounds.extents.x < enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30 &&
+                    playerCollider.bounds.center.x + playerCollider.bounds.extents.x > enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x - 30)
+                {
+                    currentDirection = EnemyDirection.Up;
+                    print("Looking up");
+                }
+                break;
+
+
+            case EnemyDirection.Down:
+                if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x < enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x - 30)
+                {
+                    currentDirection = EnemyDirection.Left;
+                    print("Looking left");
+
+                }
+                else if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x < enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x &&
+                        playerCollider.bounds.center.y - playerCollider.bounds.extents.y < enemyCollider.bounds.center.y + enemyCollider.bounds.extents.y &&
+                        playerCollider.bounds.center.y + playerCollider.bounds.extents.y > enemyCollider.bounds.center.y - enemyCollider.bounds.extents.y &&
+                        playerCollider.bounds.center.x + playerCollider.bounds.extents.x > enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x - 30)
+                {
+                    currentDirection = EnemyDirection.Left;
+                    print("Looking left");
+
+                }
+                else if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x > enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30)
+                {
+                    currentDirection = EnemyDirection.Right;
+                    print("Looking Right");
+
+                }
+                else if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x > enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x &&
+                        playerCollider.bounds.center.y - playerCollider.bounds.extents.y < enemyCollider.bounds.center.y + enemyCollider.bounds.extents.y &&
+                        playerCollider.bounds.center.y + playerCollider.bounds.extents.y > enemyCollider.bounds.center.y - enemyCollider.bounds.extents.y &&
+                        playerCollider.bounds.center.x - playerCollider.bounds.extents.x < enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30)
+                {
+                    currentDirection = EnemyDirection.Right;
+                    print("Looking Right");
+
+                }
+                break;
+
+            case EnemyDirection.Up:
+                if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x < enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x - 30)
+                {
+                    currentDirection = EnemyDirection.Left;
+                    print("Looking left");
+
+                }
+                else if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x < enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x &&
+                        playerCollider.bounds.center.y - playerCollider.bounds.extents.y < enemyCollider.bounds.center.y + enemyCollider.bounds.extents.y &&
+                        playerCollider.bounds.center.y + playerCollider.bounds.extents.y > enemyCollider.bounds.center.y - enemyCollider.bounds.extents.y &&
+                        playerCollider.bounds.center.x + playerCollider.bounds.extents.x > enemyCollider.bounds.center.x - enemyCollider.bounds.extents.x - 30)
+                {
+                    currentDirection = EnemyDirection.Left;
+                    print("Looking left");
+
+                }
+                else if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x > enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30)
+                {
+                    currentDirection = EnemyDirection.Right;
+                    print("Looking Right");
+
+                }
+                else if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x > enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x &&
+                        playerCollider.bounds.center.y - playerCollider.bounds.extents.y < enemyCollider.bounds.center.y + enemyCollider.bounds.extents.y &&
+                        playerCollider.bounds.center.y + playerCollider.bounds.extents.y > enemyCollider.bounds.center.y - enemyCollider.bounds.extents.y &&
+                        playerCollider.bounds.center.x - playerCollider.bounds.extents.x < enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30)
+                {
+                    currentDirection = EnemyDirection.Right;
+                    print("Looking Right");
+
+                }
+                break;
+        }
+    }
+
+    void Shoot()
+    {
+        projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+    }
+
+    private void RangedEnemy()
+    {
+        ChangeDirection();
+    }
+
 }

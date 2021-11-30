@@ -216,34 +216,34 @@ public class PlayerBehavior : MonoBehaviour
         switch (currentDirection)
         {
             case PlayerDirection.Right:
-                if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x < other.bounds.center.x + other.bounds.extents.x)
+                if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x < other.bounds.center.x + other.bounds.extents.x && other.tag != "Enemy Bullet")
                 {
                     collidingRight = true;
-                    //Debug.Log("Collision Active");
+                    Debug.Log("Collision Active");
                 }
                 break;
 
             case PlayerDirection.Left:
-                if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x > other.bounds.center.x - other.bounds.extents.x)
+                if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x > other.bounds.center.x - other.bounds.extents.x && other.tag != "Enemy Bullet")
                 {
                     collidingLeft = true;
-                    //Debug.Log("Collision Active");
+                    Debug.Log("Collision Active");
                 }
                 break;
 
             case PlayerDirection.Down:
-                if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y > other.bounds.center.y - other.bounds.extents.y)
+                if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y > other.bounds.center.y - other.bounds.extents.y && other.tag != "Enemy Bullet")
                 {
                     collidingBottom = true;
-                    //Debug.Log("Collision Active");
+                    Debug.Log("Collision Active");
                 }
                 break;
 
             case PlayerDirection.Up:
-                if (playerCollider.bounds.center.y - playerCollider.bounds.extents.y < other.bounds.center.y + other.bounds.extents.y)
+                if (playerCollider.bounds.center.y - playerCollider.bounds.extents.y < other.bounds.center.y + other.bounds.extents.y && other.tag != "Enemy Bullet")
                 {
                     collidingTop = true;
-                    //Debug.Log("Collision Active");
+                    Debug.Log("Collision Active");
                 }
                 break;
         }
