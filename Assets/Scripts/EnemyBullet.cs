@@ -29,5 +29,11 @@ public class EnemyBullet : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if(other.tag == "Fireball")
+        {
+            Destroy(gameObject);
+            Destroy(other.gameObject);
+        }
     }
 }

@@ -12,26 +12,35 @@ public enum PlayerDirection
 
 public class PlayerBehavior : MonoBehaviour
 {
-    public GameObject projectilePrefab;
-
+    //public GameObject projectilePrefab;
     public GameObject fireballPrefab;
 
+    //Direction and velocity
     private PlayerDirection currentDirection = PlayerDirection.Right;
     private Vector3 velocity = Vector3.zero;
 
+    //Sprite information
     private SpriteRenderer playerSprite;
     private Collider2D playerCollider;
 
+    //Wall collision bools
     private bool collidingTop = false;
     private bool collidingLeft = false;
     private bool collidingBottom = false;
     private bool collidingRight = false;
 
+    //Projectile information
     private GameObject projectile;
     private Vector3 projectileVelocity;
 
-    bool basicProjectileActive = true;
-    bool fireBallActive = false;
+    //private List<GameObject> projectiles = new List<GameObject>();
+
+    //Player stat(s)
+    private int health = 100;
+
+
+    //bool basicProjectileActive = true;
+    bool fireBallActive = true;
 
     void Start()
     {
@@ -54,19 +63,19 @@ public class PlayerBehavior : MonoBehaviour
         }
 
         //Switch Projectiles
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            basicProjectileActive = true;
-            fireBallActive = false;
-            //print("Basic Projectile Now Active");
-        }
+        //if(Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    basicProjectileActive = true;
+        //    fireBallActive = false;
+        //    //print("Basic Projectile Now Active");
+        //}
 
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            fireBallActive = true;
-            basicProjectileActive = false;
-            //print("Fireball now active");
-        }
+        //if(Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    fireBallActive = true;
+        //    basicProjectileActive = false;
+        //    //print("Fireball now active");
+        //}
 
         //Move Up
         if (Input.GetKey(KeyCode.W) && !collidingTop)
@@ -178,14 +187,15 @@ public class PlayerBehavior : MonoBehaviour
                 break;
         }
 
-        if(basicProjectileActive)
-        {
-            projectile = Instantiate(projectilePrefab, instantiateSpot, Quaternion.identity);
-            Destroy(projectile, 2.0f);
-        }
+        //if(basicProjectileActive)
+        //{
+        //    projectile = Instantiate(projectilePrefab, instantiateSpot, Quaternion.identity);
+        //    Destroy(projectile, 2.0f);
+        //}
 
-        else if(fireBallActive)
+        if(fireBallActive)
         {
+            Destroy(projectile);
             projectile = Instantiate(fireballPrefab, instantiateSpot, Quaternion.identity);
             switch (currentDirection) //Change Orientation of the projectile
             {
@@ -219,7 +229,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.x - playerCollider.bounds.extents.x < other.bounds.center.x + other.bounds.extents.x && other.tag != "Enemy Bullet")
                 {
                     collidingRight = true;
-                    Debug.Log("Collision Active");
+                    //Debug.Log("Collision Active");
                 }
                 break;
 
@@ -227,7 +237,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.x + playerCollider.bounds.extents.x > other.bounds.center.x - other.bounds.extents.x && other.tag != "Enemy Bullet")
                 {
                     collidingLeft = true;
-                    Debug.Log("Collision Active");
+                    //Debug.Log("Collision Active");
                 }
                 break;
 
@@ -235,7 +245,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y > other.bounds.center.y - other.bounds.extents.y && other.tag != "Enemy Bullet")
                 {
                     collidingBottom = true;
-                    Debug.Log("Collision Active");
+                    //Debug.Log("Collision Active");
                 }
                 break;
 
@@ -243,7 +253,7 @@ public class PlayerBehavior : MonoBehaviour
                 if (playerCollider.bounds.center.y - playerCollider.bounds.extents.y < other.bounds.center.y + other.bounds.extents.y && other.tag != "Enemy Bullet")
                 {
                     collidingTop = true;
-                    Debug.Log("Collision Active");
+                    //Debug.Log("Collision Active");
                 }
                 break;
         }
@@ -262,6 +272,17 @@ public class PlayerBehavior : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         CheckCollisionDirection(other);
+
+        if(other.tag == "Enemy Bullet")
+        {
+            health -= 10;
+            playerSprite.color = Color.red;
+        }
+
+        if(health <= 0)
+        {
+            print("GAME OVER");
+        }
     }
 
     //Triggers whenever the rigid body stops colliding with a Collider2D
@@ -269,5 +290,10 @@ public class PlayerBehavior : MonoBehaviour
     {
         ResetCollisions();
         //Debug.Log("Collisions Reset!");
+
+        if(playerSprite.color == Color.red)
+        {
+            playerSprite.color = Color.white;
+        }
     }
 }
