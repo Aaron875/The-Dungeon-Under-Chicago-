@@ -25,7 +25,7 @@ public class EnemyBullet : MonoBehaviour
     //checks if the player is hit by the projectile
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" || other.tag == "Projectile Catcher")
         {
             Destroy(gameObject);
         }

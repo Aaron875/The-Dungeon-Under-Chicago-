@@ -14,8 +14,7 @@ public class EnemyBehavior : MonoBehaviour
 {
     public Animator enemyAnimator;
 
-    [SerializeField]
-    private EnemyDirection currentDirection;
+    public EnemyDirection currentDirection;
 
     public GameObject projectilePrefab;
 
@@ -40,8 +39,7 @@ public class EnemyBehavior : MonoBehaviour
     private string rangeOrMelee;
 
     // used to reduce player health
-    [SerializeField]
-    private GameObject player;
+    public GameObject player;
 
     //times the enemies shots
     float targetTime = 4.0f;

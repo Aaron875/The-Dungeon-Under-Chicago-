@@ -271,6 +271,11 @@ public class PlayerBehavior : MonoBehaviour
     //Triggers whenever the rigid body collides with a Collider2D
     void OnTriggerEnter2D(Collider2D other)
     {
+        if(other.tag == "Projectile Catcher")
+        {
+            return;
+        }
+
         CheckCollisionDirection(other);
 
         if(other.tag == "Enemy Bullet")
