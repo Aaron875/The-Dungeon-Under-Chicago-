@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public enum buttonType
 {
     Start,
-    Quit
+    Quit,
+    Retry,
 }
 
 public class ButtonBehavior : MonoBehaviour
@@ -15,7 +16,7 @@ public class ButtonBehavior : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if(type == buttonType.Start)
+        if(type == buttonType.Start || type == buttonType.Retry)
         {
             SceneManager.LoadScene("Room1");
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum PlayerDirection
 {
@@ -286,7 +287,8 @@ public class PlayerBehavior : MonoBehaviour
 
         if(health <= 0)
         {
-            print("GAME OVER");
+            SceneManager.LoadScene("GameOver");
+            //health = 100;
         }
     }
 
