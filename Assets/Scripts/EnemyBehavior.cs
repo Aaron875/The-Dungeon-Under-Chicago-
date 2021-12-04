@@ -71,6 +71,62 @@ public class EnemyBehavior : MonoBehaviour
             }
         }
 
+        // run this code if it is a melee enemy
+        else if(rangeOrMelee == "Melee")
+        {
+            MeleeEnemy();
+            print(Vector2.Distance(this.gameObject.transform.position, player.transform.position));
+            if (Vector2.Distance(this.gameObject.transform.position, player.transform.position) < 100.0f)
+            {
+                /*switch (currentDirection)
+                {
+                    case EnemyDirection.Left:
+                        transform.position += Vector3.left * 0.1f;
+                        break;
+
+                    case EnemyDirection.Right:
+                        transform.position += Vector3.right * 0.1f;
+                        break;
+
+                    case EnemyDirection.Up:
+                        transform.position += Vector3.up * 0.1f;
+                        break;
+
+                    case EnemyDirection.Down:
+                        transform.position += Vector3.down * 0.1f;
+                        break;
+                }*/
+                // Check if player is left of melee enemy
+                if(player.transform.position.x < this.gameObject.transform.position.x)
+                {
+                    // Move enemy left
+                    transform.position += Vector3.left * 0.3f;
+                }
+
+                // Check if player is right of melee enemy
+                if (player.transform.position.x > this.gameObject.transform.position.x)
+                {
+                    // Move enemy right
+                    transform.position += Vector3.right * 0.3f;
+                }
+
+                // Check if player is above melee enemy
+                if (player.transform.position.y > this.gameObject.transform.position.y)
+                {
+                    // Move enemy up
+                    transform.position += Vector3.up * 0.3f;
+                }
+
+                // Check if player is below melee enemy
+                if (player.transform.position.y < this.gameObject.transform.position.y)
+                {
+                    // Move enemy down
+                    transform.position += Vector3.down * 0.3f;
+                }
+            }
+            
+        }
+
         // Destory the enemy if its health reaches 0 or less
         if (health <= 0)
         {
@@ -254,6 +310,11 @@ public class EnemyBehavior : MonoBehaviour
     }
 
     private void RangedEnemy()
+    {
+        ChangeDirection();
+    }
+
+    private void MeleeEnemy()
     {
         ChangeDirection();
     }
