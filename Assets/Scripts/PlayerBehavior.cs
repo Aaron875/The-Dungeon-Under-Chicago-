@@ -37,7 +37,9 @@ public class PlayerBehavior : MonoBehaviour
     //private List<GameObject> projectiles = new List<GameObject>();
 
     //Player stat(s)
-    private int health = 100;
+    public float health = 100;
+    public float attack = 10;
+    public float shieldRestore = 0.5f;
     private bool shielding = false;
 
     //bool basicProjectileActive = true;
@@ -288,17 +290,59 @@ public class PlayerBehavior : MonoBehaviour
 
         CheckCollisionDirection(other);
 
-        if(other.tag == "Enemy Bullet" && !shielding)
+        //Enemy Interaction
+        if((other.tag == "Enemy Bullet" || other.tag == "Melee Enemy") && !shielding)
         {
             health -= 10;
             playerSprite.color = Color.red;
         }
-        //else if(other.tag == "Enemy Bullet" && shielding)
-        //{
-        //    print("BLOCKED PROJECTILE");
-        //}
 
-        if(health <= 0)
+        if (other.tag == "Ranged Enemy" && !shielding)
+        {
+            health -= 5;
+            playerSprite.color = Color.red;
+        }
+
+        if ((other.tag == "Enemy Bullet" || other.tag == "Melee Enemy") && shielding)
+        {
+            if(health + 0.5f <= 100)
+            {
+                health += shieldRestore;
+            }
+            if(health > 100)
+            {
+                health = 100;
+            }
+            playerSprite.color = Color.yellow;
+        }
+
+        //Pickups
+        //Minor pickups are ones that are dropped by regular enemies
+        if(other.tag == "Minor Fire Pickup")
+        {
+            attack += 0.5f;
+            Destroy(other.gameObject);
+        }
+        if (other.tag == "Minor Shield Pickup")
+        {
+            shieldRestore += 0.5f;
+            Destroy(other.gameObject);
+        }
+
+        //Major pickups give larger buffs and can only be found in a single room
+        if (other.tag == "Major Fire Pickup")
+        {
+            attack += 25.0f;
+            Destroy(other.gameObject);
+        }
+        if (other.tag == "Major Shield Pickup")
+        {
+            shieldRestore += 10.0f;
+            Destroy(other.gameObject);
+        }
+
+        //Death
+        if (health <= 0)
         {
             SceneManager.LoadScene("GameOver");
             //health = 100;

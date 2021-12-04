@@ -8,6 +8,8 @@ TagManager:
   - Fireball
   - Enemy Bullet
   - Projectile Catcher
+  - Ranged Enemy
+  - Melee Enemy
   layers:
   - Default
   - TransparentFX

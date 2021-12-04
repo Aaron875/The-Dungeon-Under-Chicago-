@@ -1,13 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class LevelManager : MonoBehaviour
 {
     //Fields
     public GameObject rangedEnemyPrefab;
     public GameObject meleeEnemyPrefab;
+
     public GameObject player;
+    private PlayerBehavior playerScript;
+
+    //public GameObject healthText;
+    public TextMeshProUGUI healthTMP;
+
+    //public GameObject attackText;
+    public TextMeshProUGUI attackTMP;
+
+    public GameObject majorFirePickup;
+    public GameObject majorShieldPickup;
+
+
 
     private List<GameObject> room1Enemies = new List<GameObject>();
     private List<GameObject> room2Enemies = new List<GameObject>();
@@ -70,13 +83,18 @@ public class LevelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Room 1
-        Room1Enemies.Add(Instantiate(rangedEnemyPrefab, new Vector3(0.0f, 13.0f, -60.0f), Quaternion.identity));
-        BehaviorScript = Room1Enemies[0].GetComponent<EnemyBehavior>();
-        BehaviorScript.player = player;
+        playerScript = player.GetComponent<PlayerBehavior>();
 
+        //healthTMP = healthText.GetComponent<TextMeshPro>();
+        //attackTMP = attackText.GetComponent<TextMeshPro>();
+
+
+        //Room 1
+        //Room1Enemies.Add(Instantiate(rangedEnemyPrefab, new Vector3(0.0f, 13.0f, -60.0f), Quaternion.identity));
+        //BehaviorScript = Room1Enemies[0].GetComponent<EnemyBehavior>();
+        //BehaviorScript.player = player;
         room1Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(0.0f, 10.0f, -60.0f), Quaternion.identity));
-        BehaviorScript = room1Enemies[1].GetComponent<EnemyBehavior>();
+        BehaviorScript = room1Enemies[0].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
 
@@ -107,7 +125,7 @@ public class LevelManager : MonoBehaviour
         BehaviorScript = Room4Enemies[2].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
-        Room4Enemies.Add(Instantiate(rangedEnemyPrefab, new Vector3(-238.0f, 602.0f, -60.0f), Quaternion.identity));
+        Room4Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(-238.0f, 602.0f, -60.0f), Quaternion.identity));
         BehaviorScript = Room4Enemies[3].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
@@ -146,7 +164,7 @@ public class LevelManager : MonoBehaviour
         BehaviorScript.player = player;
 
         //Room7
-        Room7Enemies.Add(Instantiate(rangedEnemyPrefab, new Vector3(1090.0f, 12.0f, -60.0f), Quaternion.identity));
+        Room7Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(1090.0f, 12.0f, -60.0f), Quaternion.identity));
         BehaviorScript = Room7Enemies[0].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
@@ -174,7 +192,19 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //GUI
+        healthTMP.text = "Health: " + playerScript.health;
+        attackTMP.text = "Attack: " + playerScript.attack;
+
+        if(majorFirePickup == null)
+        {
+            Destroy(majorShieldPickup);
+        }
+        else if(majorShieldPickup == null)
+        {
+            Destroy(majorFirePickup);
+        }
+
     }
 
     //Set all enemies that are not in the first room to be inactive
