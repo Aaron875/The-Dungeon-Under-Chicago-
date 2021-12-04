@@ -19,6 +19,7 @@ public class AnimatePlayer : MonoBehaviour
 
     private bool moving;
     private bool shooting;
+    private bool shielding;
 
     private bool spriteFlipped;
 
@@ -43,13 +44,22 @@ public class AnimatePlayer : MonoBehaviour
     void CheckInput()
     {
         //Check if the player is shooting
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
             shooting = true;
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
             shooting = false;
+        }
+
+        if (!moving && Input.GetKey(KeyCode.LeftShift))
+        {
+            shielding = true;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            shielding = false;
         }
 
         //If no keys are down, reset moving variable
@@ -65,6 +75,7 @@ public class AnimatePlayer : MonoBehaviour
             moving = false;
             return; //No need to check individual keys if the player cannot be moving
         }
+
 
         //Check which direction the player is moving in
         //Player will animate in the direction of the last key pressed
@@ -103,6 +114,7 @@ public class AnimatePlayer : MonoBehaviour
     {
         playerAnimator.SetBool("moving", moving);
         playerAnimator.SetBool("shooting", shooting);
+        playerAnimator.SetBool("shielding", shielding);
         playerAnimator.SetFloat("direction", (float)currentDirection);
     }
 
@@ -112,6 +124,7 @@ public class AnimatePlayer : MonoBehaviour
     {
         moving = false;
         shooting = false;
+        shielding = false;
         currentDirection = Directions.Right;
     }
 }
