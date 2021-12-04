@@ -38,7 +38,7 @@ public class PlayerBehavior : MonoBehaviour
 
     //Player stat(s)
     private int health = 100;
-
+    private bool shielding = false;
 
     //bool basicProjectileActive = true;
     bool fireBallActive = true;
@@ -58,7 +58,7 @@ public class PlayerBehavior : MonoBehaviour
             projectile.transform.position += projectileVelocity;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !shielding)
         {
             shoot();
         }
@@ -79,7 +79,7 @@ public class PlayerBehavior : MonoBehaviour
         //}
 
         //Move Up
-        if (Input.GetKey(KeyCode.W) && !collidingTop)
+        if (Input.GetKey(KeyCode.W) && !collidingTop && !shielding)
         {
             if (currentDirection != PlayerDirection.Up)
             {
@@ -93,7 +93,7 @@ public class PlayerBehavior : MonoBehaviour
         }
 
         //Move Left
-        if (Input.GetKey(KeyCode.A) && !collidingLeft)
+        if (Input.GetKey(KeyCode.A) && !collidingLeft && !shielding)
         {
             if (currentDirection != PlayerDirection.Left)
             {
@@ -107,7 +107,7 @@ public class PlayerBehavior : MonoBehaviour
         }
 
         //Move Down
-        if (Input.GetKey(KeyCode.S) && !collidingBottom)
+        if (Input.GetKey(KeyCode.S) && !collidingBottom && !shielding)
         {
             if (currentDirection != PlayerDirection.Down)
             {
@@ -121,7 +121,7 @@ public class PlayerBehavior : MonoBehaviour
         }
 
         //Move Right
-        if (Input.GetKey(KeyCode.D) && !collidingRight)
+        if (Input.GetKey(KeyCode.D) && !collidingRight && !shielding)
         {
             if (currentDirection != PlayerDirection.Right)
             {
@@ -132,6 +132,15 @@ public class PlayerBehavior : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.D))
         {
             resetVelocity();
+        }
+
+        if(Input.GetKey(KeyCode.LeftShift) && velocity == Vector3.zero)
+        {
+            shielding = true;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            shielding = false;
         }
     }
 
@@ -279,11 +288,15 @@ public class PlayerBehavior : MonoBehaviour
 
         CheckCollisionDirection(other);
 
-        if(other.tag == "Enemy Bullet")
+        if(other.tag == "Enemy Bullet" && !shielding)
         {
             health -= 10;
             playerSprite.color = Color.red;
         }
+        //else if(other.tag == "Enemy Bullet" && shielding)
+        //{
+        //    print("BLOCKED PROJECTILE");
+        //}
 
         if(health <= 0)
         {
