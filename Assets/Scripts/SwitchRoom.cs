@@ -7,8 +7,7 @@ public enum moveDirection
     Up,
     Right,
     Down,
-    Left,
-    ToBossRoom
+    Left
 }
 
 public class SwitchRoom : MonoBehaviour
@@ -54,12 +53,6 @@ public class SwitchRoom : MonoBehaviour
             case moveDirection.Left:
                 mainCam.transform.position = new Vector3(mainCam.transform.position.x - 544, mainCam.transform.position.y, mainCam.transform.position.z);
                 player.transform.position = new Vector3(player.transform.position.x - 44.5f, player.transform.position.y, player.transform.position.z);
-                adjustEnemies();
-                break;
-
-            case moveDirection.ToBossRoom:
-                mainCam.transform.position = new Vector3(2172, 593.6f, mainCam.transform.position.z);
-                player.transform.position = new Vector3(1960, 590, player.transform.position.z);
                 adjustEnemies();
                 break;
         }

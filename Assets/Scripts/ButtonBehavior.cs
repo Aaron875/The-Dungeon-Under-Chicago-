@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 public enum buttonType
 {
     Start,
-    Lore,
     Quit,
     Retry,
 }
@@ -17,11 +16,6 @@ public class ButtonBehavior : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if(type == buttonType.Lore)
-        {
-            SceneManager.LoadScene("GameLore");
-        }
-
         if(type == buttonType.Start || type == buttonType.Retry)
         {
             SceneManager.LoadScene("Room1");
