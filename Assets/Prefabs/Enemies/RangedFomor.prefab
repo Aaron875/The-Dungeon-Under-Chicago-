@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 852130739575520739}
   m_Layer: 0
   m_Name: RangedFomor
-  m_TagString: Untagged
+  m_TagString: Ranged Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -167,5 +167,7 @@ MonoBehaviour:
   enemyAnimator: {fileID: 6019330795932882740}
   currentDirection: 3
   projectilePrefab: {fileID: 4575498036319530546, guid: d02ff9b5a07968d41bb541eca3273451, type: 3}
+  minorFirePickupPrefab: {fileID: 298148118610015098, guid: c29a1370b7a3d8847bdfc183a1e5a9fa, type: 3}
+  minorShieldPickupPrefab: {fileID: 5633893738208297727, guid: 84af472cd55503142964a0cbe457a0cb, type: 3}
   rangeOrMelee: Ranged
   player: {fileID: 0}

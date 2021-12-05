@@ -13,6 +13,8 @@ public enum PlayerDirection
 
 public class PlayerBehavior : MonoBehaviour
 {
+    PauseGame pauseMenu;
+
     //public GameObject projectilePrefab;
     public GameObject fireballPrefab;
 
@@ -37,7 +39,9 @@ public class PlayerBehavior : MonoBehaviour
     //private List<GameObject> projectiles = new List<GameObject>();
 
     //Player stat(s)
-    private int health = 100;
+    public float health = 100; //100
+    public float attack = 10; //10
+    public float shieldRestore = 0.5f;
     private bool shielding = false;
 
     //bool basicProjectileActive = true;
@@ -47,101 +51,92 @@ public class PlayerBehavior : MonoBehaviour
     {
         playerSprite = gameObject.GetComponent<SpriteRenderer>();
         playerCollider = gameObject.GetComponent<Collider2D>();
+
+        pauseMenu = GameObject.FindObjectOfType<PauseGame>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Projectile
-        if(projectile != null)
+        if (!pauseMenu.gamePaused)
         {
-            projectile.transform.position += projectileVelocity;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && !shielding)
-        {
-            shoot();
-        }
-
-        //Switch Projectiles
-        //if(Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    basicProjectileActive = true;
-        //    fireBallActive = false;
-        //    //print("Basic Projectile Now Active");
-        //}
-
-        //if(Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    fireBallActive = true;
-        //    basicProjectileActive = false;
-        //    //print("Fireball now active");
-        //}
-
-        //Move Up
-        if (Input.GetKey(KeyCode.W) && !collidingTop && !shielding)
-        {
-            if (currentDirection != PlayerDirection.Up)
+            //Projectile
+            if (projectile != null)
             {
-                currentDirection = PlayerDirection.Up;
+                projectile.transform.position += projectileVelocity;
             }
-            move(currentDirection);
-        }
-        if (Input.GetKeyUp(KeyCode.W))
-        {
-            resetVelocity();
-        }
 
-        //Move Left
-        if (Input.GetKey(KeyCode.A) && !collidingLeft && !shielding)
-        {
-            if (currentDirection != PlayerDirection.Left)
+            if (Input.GetKeyDown(KeyCode.Space) && !shielding)
             {
-                currentDirection = PlayerDirection.Left;
+                shoot();
             }
-            move(currentDirection);
-        }
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            resetVelocity();
-        }
 
-        //Move Down
-        if (Input.GetKey(KeyCode.S) && !collidingBottom && !shielding)
-        {
-            if (currentDirection != PlayerDirection.Down)
+            //Move Up
+            if (Input.GetKey(KeyCode.W) && !collidingTop && !shielding)
             {
-                currentDirection = PlayerDirection.Down;
+                if (currentDirection != PlayerDirection.Up)
+                {
+                    currentDirection = PlayerDirection.Up;
+                }
+                move(currentDirection);
             }
-            move(currentDirection);
-        }
-        if (Input.GetKeyUp(KeyCode.S))
-        {
-            resetVelocity();
-        }
-
-        //Move Right
-        if (Input.GetKey(KeyCode.D) && !collidingRight && !shielding)
-        {
-            if (currentDirection != PlayerDirection.Right)
+            if (Input.GetKeyUp(KeyCode.W))
             {
-                currentDirection = PlayerDirection.Right;
+                resetVelocity();
             }
-            move(currentDirection);
-        }
-        if (Input.GetKeyUp(KeyCode.D))
-        {
-            resetVelocity();
+
+            //Move Left
+            if (Input.GetKey(KeyCode.A) && !collidingLeft && !shielding)
+            {
+                if (currentDirection != PlayerDirection.Left)
+                {
+                    currentDirection = PlayerDirection.Left;
+                }
+                move(currentDirection);
+            }
+            if (Input.GetKeyUp(KeyCode.A))
+            {
+                resetVelocity();
+            }
+
+            //Move Down
+            if (Input.GetKey(KeyCode.S) && !collidingBottom && !shielding)
+            {
+                if (currentDirection != PlayerDirection.Down)
+                {
+                    currentDirection = PlayerDirection.Down;
+                }
+                move(currentDirection);
+            }
+            if (Input.GetKeyUp(KeyCode.S))
+            {
+                resetVelocity();
+            }
+
+            //Move Right
+            if (Input.GetKey(KeyCode.D) && !collidingRight && !shielding)
+            {
+                if (currentDirection != PlayerDirection.Right)
+                {
+                    currentDirection = PlayerDirection.Right;
+                }
+                move(currentDirection);
+            }
+            if (Input.GetKeyUp(KeyCode.D))
+            {
+                resetVelocity();
+            }
+
+            if (Input.GetKey(KeyCode.LeftShift) && velocity == Vector3.zero)
+            {
+                shielding = true;
+            }
+            if (Input.GetKeyUp(KeyCode.LeftShift))
+            {
+                shielding = false;
+            }
         }
 
-        if(Input.GetKey(KeyCode.LeftShift) && velocity == Vector3.zero)
-        {
-            shielding = true;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            shielding = false;
-        }
     }
 
     //Adjust the camera and player position so that the player is always at the center of the camera
@@ -197,13 +192,7 @@ public class PlayerBehavior : MonoBehaviour
                 break;
         }
 
-        //if(basicProjectileActive)
-        //{
-        //    projectile = Instantiate(projectilePrefab, instantiateSpot, Quaternion.identity);
-        //    Destroy(projectile, 2.0f);
-        //}
-
-        if(fireBallActive)
+        if (fireBallActive)
         {
             Destroy(projectile);
             projectile = Instantiate(fireballPrefab, instantiateSpot, Quaternion.identity);
@@ -221,7 +210,7 @@ public class PlayerBehavior : MonoBehaviour
             }
             Destroy(projectile, 3.0f);
         }
-        
+
     }
 
     //Set the velocity vector to 0
@@ -281,28 +270,63 @@ public class PlayerBehavior : MonoBehaviour
     //Triggers whenever the rigid body collides with a Collider2D
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Projectile Catcher")
-        {
-            return;
-        }
 
         CheckCollisionDirection(other);
 
-        if(other.tag == "Enemy Bullet" && !shielding)
+        if (other.tag == "Projectile Catcher")
+        {
+            ResetCollisions();
+            return;
+        }
+
+        //Enemy Interaction
+        if ((other.tag == "Enemy Bullet" || other.tag == "Melee Enemy") && !shielding)
         {
             health -= 10;
             playerSprite.color = Color.red;
         }
-        //else if(other.tag == "Enemy Bullet" && shielding)
-        //{
-        //    print("BLOCKED PROJECTILE");
-        //}
 
-        if(health <= 0)
+        if (other.tag == "Ranged Enemy" && !shielding)
+        {
+            health -= 5;
+            playerSprite.color = Color.red;
+        }
+
+        if ((other.tag == "Enemy Bullet" || other.tag == "Melee Enemy") && shielding)
+        {
+            if (health + 0.5f <= 100)
+            {
+                health += shieldRestore;
+            }
+            if (health > 100)
+            {
+                health = 100;
+            }
+            playerSprite.color = Color.yellow;
+        }
+
+        //Pickups
+        //Minor pickups are ones that are dropped by regular enemies
+        if (other.tag == "Minor Fire Pickup")
+        {
+            attack += 0.5f;
+            Destroy(other.gameObject);
+            ResetCollisions();
+        }
+        if (other.tag == "Minor Shield Pickup")
+        {
+            shieldRestore += 0.5f;
+            Destroy(other.gameObject);
+            ResetCollisions();
+        }
+
+        //Death
+        if (health <= 0)
         {
             SceneManager.LoadScene("GameOver");
             //health = 100;
         }
+
     }
 
     //Triggers whenever the rigid body stops colliding with a Collider2D
@@ -311,7 +335,7 @@ public class PlayerBehavior : MonoBehaviour
         ResetCollisions();
         //Debug.Log("Collisions Reset!");
 
-        if(playerSprite.color == Color.red)
+        if (playerSprite.color != Color.white)
         {
             playerSprite.color = Color.white;
         }

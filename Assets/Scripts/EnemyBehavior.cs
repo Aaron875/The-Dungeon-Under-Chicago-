@@ -12,12 +12,16 @@ public enum EnemyDirection
 
 public class EnemyBehavior : MonoBehaviour
 {
+    PauseGame pauseMenu;
+
     public Animator enemyAnimator;
 
     public EnemyDirection currentDirection;
 
     public GameObject projectilePrefab;
 
+    public GameObject minorFirePickupPrefab;
+    public GameObject minorShieldPickupPrefab;
 
     private Vector3 velocity2 = Vector3.zero;
 
@@ -25,24 +29,20 @@ public class EnemyBehavior : MonoBehaviour
     private Collider2D enemyCollider;
     private Collider2D playerCollider;
 
-    private bool collidingTop = false;
-    private bool collidingLeft = false;
-    private bool collidingBottom = false;
-    private bool collidingRight = false;
-
     private GameObject projectile;
     private Vector3 projectileVelocity;
 
-    private int health;
+    private float health;
 
     [SerializeField]
     private string rangeOrMelee;
 
     // used to reduce player health
     public GameObject player;
+    private PlayerBehavior playerScript;
 
     //times the enemies shots
-    float targetTime = 4.0f;
+    float targetTime;
 
 
     // Start is called before the first frame update
@@ -51,114 +51,170 @@ public class EnemyBehavior : MonoBehaviour
         enemySprite = gameObject.GetComponent<SpriteRenderer>();
         enemyCollider = gameObject.GetComponent<Collider2D>();
         playerCollider = player.GetComponent<Collider2D>();
-        health = 100;
+
+        playerScript = player.GetComponent<PlayerBehavior>();
+
+        pauseMenu = FindObjectOfType<PauseGame>();
+
+        if (rangeOrMelee == "Ranged" || rangeOrMelee == "Melee")
+        {
+            health = 50;
+            targetTime = 2.5f;
+        }
+        if (rangeOrMelee == "BossLV1")
+        {
+            health = 100;
+            targetTime = 2f;
+        }
+        if (rangeOrMelee == "BossLV2")
+        {
+            health = 250;
+            targetTime = 1.5f;
+        }
+        if (rangeOrMelee == "BossLV3")
+        {
+            health = 350;
+            targetTime = 1f;
+        }
+        if (rangeOrMelee == "BossLV4")
+        {
+            health = 750;
+            targetTime = 1f;
+        }
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        // run this code if it is a ranged enemy
-        if (rangeOrMelee == "Ranged")
+        if (!pauseMenu.gamePaused)
         {
-            RangedEnemy();
-            targetTime -= Time.deltaTime;
-
-            if (targetTime <= 0.0f)
+            if (rangeOrMelee == "BossLV1" || rangeOrMelee == "BossLV2" || rangeOrMelee == "BossLV3" || rangeOrMelee == "BossLV4")
             {
-                Shoot();
-                targetTime = 4.0f;
-                //print("shoot");
-            }
-        }
+                RangedEnemy();
+                targetTime -= Time.deltaTime;
 
-        // run this code if it is a melee enemy
-        else if(rangeOrMelee == "Melee")
-        {
-            MeleeEnemy();
-            print(Vector2.Distance(this.gameObject.transform.position, player.transform.position));
-            if (Vector2.Distance(this.gameObject.transform.position, player.transform.position) < 100.0f)
-            {
-                /*switch (currentDirection)
+                if (targetTime <= 0.0f)
                 {
-                    case EnemyDirection.Left:
-                        transform.position += Vector3.left * 0.1f;
-                        break;
-
-                    case EnemyDirection.Right:
-                        transform.position += Vector3.right * 0.1f;
-                        break;
-
-                    case EnemyDirection.Up:
-                        transform.position += Vector3.up * 0.1f;
-                        break;
-
-                    case EnemyDirection.Down:
-                        transform.position += Vector3.down * 0.1f;
-                        break;
-                }*/
-                // Check if player is left of melee enemy
-                if(player.transform.position.x < this.gameObject.transform.position.x)
-                {
-                    // Move enemy left
-                    transform.position += Vector3.left * 0.3f;
-                }
-
-                // Check if player is right of melee enemy
-                if (player.transform.position.x > this.gameObject.transform.position.x)
-                {
-                    // Move enemy right
-                    transform.position += Vector3.right * 0.3f;
-                }
-
-                // Check if player is above melee enemy
-                if (player.transform.position.y > this.gameObject.transform.position.y)
-                {
-                    // Move enemy up
-                    transform.position += Vector3.up * 0.3f;
-                }
-
-                // Check if player is below melee enemy
-                if (player.transform.position.y < this.gameObject.transform.position.y)
-                {
-                    // Move enemy down
-                    transform.position += Vector3.down * 0.3f;
+                    Shoot();
+                    switch (rangeOrMelee)
+                    {
+                        case "BossLV1":
+                            targetTime = 2f;
+                            break;
+                        case "BossLV2":
+                            targetTime = 1.5f;
+                            break;
+                        case "BossLV3":
+                        case "BossLV4":
+                            targetTime = 1f;
+                            break;
+                    }
                 }
             }
-            
-        }
 
-        // Destory the enemy if its health reaches 0 or less
-        if (health <= 0)
-        {
-            Destroy(this.gameObject);
+            // run this code if it is a ranged enemy
+            if (rangeOrMelee == "Ranged")
+            {
+                RangedEnemy();
+                targetTime -= Time.deltaTime;
+
+                if (targetTime <= 0.0f)
+                {
+                    Shoot();
+                    targetTime = 2.5f;
+                    //print("shoot");
+                }
+            }
+
+            // run this code if it is a melee enemy
+            else if (rangeOrMelee == "Melee")
+            {
+                MeleeEnemy();
+                //print(Vector2.Distance(this.gameObject.transform.position, player.transform.position));
+
+                if (Vector2.Distance(gameObject.transform.position, player.transform.position) < 20.0f)
+                {
+                    enemyAnimator.SetBool("walk", false);
+                    enemyAnimator.SetBool("idle", false);
+                    enemyAnimator.SetBool("melee", true);
+                    return;
+                }
+                else
+                {
+                    enemyAnimator.SetBool("walk", true);
+                    enemyAnimator.SetBool("idle", false);
+                    enemyAnimator.SetBool("melee", false);
+                }
+
+                if (Vector2.Distance(gameObject.transform.position, player.transform.position) < 128.0f)
+                {
+                    enemyAnimator.SetBool("walk", true);
+                    enemyAnimator.SetBool("idle", false);
+
+                    // Check if player is left of melee enemy
+                    if (player.transform.position.x < gameObject.transform.position.x)
+                    {
+                        // Move enemy left
+                        transform.position += Vector3.left * 0.3f;
+                    }
+
+                    // Check if player is right of melee enemy
+                    if (player.transform.position.x > gameObject.transform.position.x)
+                    {
+                        // Move enemy right
+                        transform.position += Vector3.right * 0.3f;
+                    }
+
+                    // Check if player is above melee enemy
+                    if (player.transform.position.y > gameObject.transform.position.y)
+                    {
+                        // Move enemy up
+                        transform.position += Vector3.up * 0.3f;
+                    }
+
+                    // Check if player is below melee enemy
+                    if (player.transform.position.y < gameObject.transform.position.y)
+                    {
+                        // Move enemy down
+                        transform.position += Vector3.down * 0.3f;
+                    }
+                }
+            }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Reduce enemies health if they get hit by a projectile
-        //if(other.tag == "BasicProjectile")
-        //{
-        //    health -= 50;
-        //    print("Projectile hit");
-        //    Destroy(other.gameObject);
-        //}
-
-        if (other.tag == "Player")
+        if (other.tag == "Player" && rangeOrMelee == "Ranged")
         {
             health -= 50;
             enemySprite.color = Color.red;
-            // need to reduce player health as well when we have a health system
         }
-
 
         // Reduce enemies health if they get hit by a fireball
         if (other.tag == "Fireball")
         {
-            health -= 25;
+            health -= playerScript.attack;
             //print("Fireball hit");
             Destroy(other.gameObject);
             enemySprite.color = Color.red;
+        }
+
+        // Destory the enemy if its health reaches 0 or less
+        if (health <= 0)
+        {
+            int randPickup = Random.Range(0, 3);
+            if (randPickup == 0)
+            {
+                Instantiate(minorFirePickupPrefab, gameObject.transform.position, Quaternion.identity);
+            }
+            else if (randPickup == 1)
+            {
+                Instantiate(minorShieldPickupPrefab, gameObject.transform.position, Quaternion.identity);
+            }
+            Destroy(gameObject);
         }
     }
 
@@ -174,12 +230,20 @@ public class EnemyBehavior : MonoBehaviour
         {
 
             case EnemyDirection.Left:
-                enemyAnimator.SetBool("FacingUp", false);
-                enemyAnimator.SetBool("FacingDown", false);
-                enemyAnimator.SetBool("FacingRight", false);
-                enemyAnimator.SetBool("FacingLeft", true);
+                if (rangeOrMelee == "Ranged")
+                {
+                    enemyAnimator.SetBool("FacingUp", false);
+                    enemyAnimator.SetBool("FacingDown", false);
+                    enemyAnimator.SetBool("FacingRight", false);
+                    enemyAnimator.SetBool("FacingLeft", true);
+                }
 
                 enemySprite.flipX = true;
+
+                if (rangeOrMelee == "BossLV1" || rangeOrMelee == "BossLV2" || rangeOrMelee == "BossLV3" || rangeOrMelee == "BossLV4")
+                {
+                    enemySprite.flipX = false;
+                }
 
                 if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y < enemyCollider.bounds.center.y - enemyCollider.bounds.extents.y &&
                     playerCollider.bounds.center.x - playerCollider.bounds.extents.x < enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30 &&
@@ -198,12 +262,20 @@ public class EnemyBehavior : MonoBehaviour
                 break;
 
             case EnemyDirection.Right:
-                enemyAnimator.SetBool("FacingUp", false);
-                enemyAnimator.SetBool("FacingDown", false);
-                enemyAnimator.SetBool("FacingRight", true);
-                enemyAnimator.SetBool("FacingLeft", false);
+                if (rangeOrMelee == "Ranged")
+                {
+                    enemyAnimator.SetBool("FacingUp", false);
+                    enemyAnimator.SetBool("FacingDown", false);
+                    enemyAnimator.SetBool("FacingRight", false);
+                    enemyAnimator.SetBool("FacingLeft", true);
+                }
 
                 enemySprite.flipX = false;
+
+                if (rangeOrMelee == "BossLV1" || rangeOrMelee == "BossLV2" || rangeOrMelee == "BossLV3" || rangeOrMelee == "BossLV4")
+                {
+                    enemySprite.flipX = true;
+                }
 
                 if (playerCollider.bounds.center.y + playerCollider.bounds.extents.y < enemyCollider.bounds.center.y - enemyCollider.bounds.extents.y &&
                     playerCollider.bounds.center.x - playerCollider.bounds.extents.x < enemyCollider.bounds.center.x + enemyCollider.bounds.extents.x + 30 &&
@@ -223,10 +295,13 @@ public class EnemyBehavior : MonoBehaviour
 
 
             case EnemyDirection.Down:
-                enemyAnimator.SetBool("FacingUp", false);
-                enemyAnimator.SetBool("FacingDown", true);
-                enemyAnimator.SetBool("FacingRight", false);
-                enemyAnimator.SetBool("FacingLeft", false);
+                if (rangeOrMelee == "Ranged")
+                {
+                    enemyAnimator.SetBool("FacingUp", false);
+                    enemyAnimator.SetBool("FacingDown", false);
+                    enemyAnimator.SetBool("FacingRight", false);
+                    enemyAnimator.SetBool("FacingLeft", true);
+                }
 
                 enemySprite.flipX = false;
 
@@ -263,10 +338,13 @@ public class EnemyBehavior : MonoBehaviour
                 break;
 
             case EnemyDirection.Up:
-                enemyAnimator.SetBool("FacingUp", true);
-                enemyAnimator.SetBool("FacingDown", false);
-                enemyAnimator.SetBool("FacingRight", false);
-                enemyAnimator.SetBool("FacingLeft", false);
+                if (rangeOrMelee == "Ranged")
+                {
+                    enemyAnimator.SetBool("FacingUp", false);
+                    enemyAnimator.SetBool("FacingDown", false);
+                    enemyAnimator.SetBool("FacingRight", false);
+                    enemyAnimator.SetBool("FacingLeft", true);
+                }
 
                 enemySprite.flipX = false;
 
