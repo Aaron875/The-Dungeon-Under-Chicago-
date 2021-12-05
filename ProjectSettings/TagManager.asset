@@ -10,6 +10,10 @@ TagManager:
   - Projectile Catcher
   - Ranged Enemy
   - Melee Enemy
+  - Minor Fire Pickup
+  - Minor Shield Pickup
+  - Major Fire Pickup
+  - Major Shield Pickup
   layers:
   - Default
   - TransparentFX

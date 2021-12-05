@@ -17,9 +17,6 @@ public class LevelManager : MonoBehaviour
     //public GameObject attackText;
     public TextMeshProUGUI attackTMP;
 
-    public GameObject majorFirePickup;
-    public GameObject majorShieldPickup;
-
 
 
     private List<GameObject> room1Enemies = new List<GameObject>();
@@ -195,16 +192,6 @@ public class LevelManager : MonoBehaviour
         //GUI
         healthTMP.text = "Health: " + playerScript.health;
         attackTMP.text = "Attack: " + playerScript.attack;
-
-        if(majorFirePickup == null)
-        {
-            Destroy(majorShieldPickup);
-        }
-        else if(majorShieldPickup == null)
-        {
-            Destroy(majorFirePickup);
-        }
-
     }
 
     //Set all enemies that are not in the first room to be inactive

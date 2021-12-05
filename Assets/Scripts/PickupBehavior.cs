@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class PickupBehavior : MonoBehaviour
 {
-
-    //THIS SCRIPT'S SOLE PURPOSE IS TO ALLOW PLAYERS TO GET UNREACHABLE PICKUPS BY SHOOTING THEM
     PlayerBehavior playerScript;
+
+    //OBJECT TO DELETE ONLY NEEDS TO BE SET FOR THE 2 MAJOR PICKUPS
+    public GameObject objectToDelete;
 
     private void Start()
     {
@@ -28,6 +29,26 @@ public class PickupBehavior : MonoBehaviour
             playerScript.shieldRestore += 0.5f;
             Destroy(gameObject);
             Destroy(other.gameObject);
+        }
+
+        if (other.tag == "Fireball" && gameObject.tag == "Major Fire Pickup")
+        {
+            playerScript.attack += 25.0f;
+            Destroy(gameObject);
+            Destroy(other.gameObject);
+        }
+
+        if (other.tag == "Fireball" && gameObject.tag == "Major Shield Pickup")
+        {
+            playerScript.shieldRestore += 10.0f;
+            Destroy(gameObject);
+            Destroy(other.gameObject);
+        }
+
+        if (other.tag == "Player" || other.tag == "Fireball")
+        {
+            Destroy(gameObject);
+            Destroy(objectToDelete);
         }
     }
 
