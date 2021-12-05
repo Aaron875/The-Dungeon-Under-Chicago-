@@ -75,7 +75,7 @@ public class LevelManager : MonoBehaviour
         BehaviorScript = Room1Enemies[0].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
-        room1Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(0.0f, 10.0f, -60.0f), Quaternion.identity));
+        room1Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(0.0f, -20.0f, -60.0f), Quaternion.identity));
         BehaviorScript = room1Enemies[1].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
@@ -94,6 +94,14 @@ public class LevelManager : MonoBehaviour
         BehaviorScript.player = player;
         BehaviorScript.currentDirection = EnemyDirection.Right;
 
+        Room2Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(-20.0f, 306.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room2Enemies[3].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
+        Room2Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(20.0f, 306.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room2Enemies[4].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
         //Room4
         Room4Enemies.Add(Instantiate(rangedEnemyPrefab, new Vector3(0.0f, 603.0f, -60.0f), Quaternion.identity));
         BehaviorScript = Room4Enemies[0].GetComponent<EnemyBehavior>();
@@ -109,6 +117,10 @@ public class LevelManager : MonoBehaviour
 
         Room4Enemies.Add(Instantiate(rangedEnemyPrefab, new Vector3(-238.0f, 602.0f, -60.0f), Quaternion.identity));
         BehaviorScript = Room4Enemies[3].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
+        Room4Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(0.0f, 550.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room4Enemies[4].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
         //Room5
@@ -128,6 +140,14 @@ public class LevelManager : MonoBehaviour
         BehaviorScript = Room5Enemies[3].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
+        Room5Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(550.0f, 600.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room5Enemies[4].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
+        Room5Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(650.0f, 600.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room5Enemies[5].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
         //Room6
         Room6Enemies.Add(Instantiate(rangedEnemyPrefab, new Vector3(465.0f, -7.0f, -60.0f), Quaternion.identity));
         BehaviorScript = Room6Enemies[0].GetComponent<EnemyBehavior>();
@@ -145,9 +165,29 @@ public class LevelManager : MonoBehaviour
         BehaviorScript = Room6Enemies[3].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
+        Room6Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(390.0f, 0.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room6Enemies[4].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
+        Room6Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(500.0f, 0.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room6Enemies[5].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
+        Room6Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(600.0f, 0.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room6Enemies[6].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
         //Room7
         Room7Enemies.Add(Instantiate(rangedEnemyPrefab, new Vector3(1090.0f, 12.0f, -60.0f), Quaternion.identity));
         BehaviorScript = Room7Enemies[0].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
+        Room7Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(1090.0f, 30.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room7Enemies[1].GetComponent<EnemyBehavior>();
+        BehaviorScript.player = player;
+
+        Room7Enemies.Add(Instantiate(meleeEnemyPrefab, new Vector3(1090.0f, -30.0f, -60.0f), Quaternion.identity));
+        BehaviorScript = Room7Enemies[2].GetComponent<EnemyBehavior>();
         BehaviorScript.player = player;
 
         //Room8
