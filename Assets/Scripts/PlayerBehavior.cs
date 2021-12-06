@@ -145,22 +145,22 @@ public class PlayerBehavior : MonoBehaviour
         switch (direction)
         {
             case PlayerDirection.Up:
-                velocity = Vector3.up * .5f;
+                velocity = Vector3.up * 1f;
                 gameObject.transform.position += velocity;
                 break;
 
             case PlayerDirection.Down:
-                velocity = Vector3.up * .5f;
+                velocity = Vector3.up * 1f;
                 gameObject.transform.position -= velocity;
                 break;
 
             case PlayerDirection.Left:
-                velocity = Vector3.right * .5f;
+                velocity = Vector3.right * 1f;
                 gameObject.transform.position -= velocity;
                 break;
 
             case PlayerDirection.Right:
-                velocity = Vector3.right * .5f;
+                velocity = Vector3.right * 1f;
                 gameObject.transform.position += velocity;
                 break;
         }

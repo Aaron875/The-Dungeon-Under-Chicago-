@@ -162,15 +162,9 @@ public class BossFight : MonoBehaviour
             case 3:
                 if (!EnemiesRemaining(Phase4Enemies))
                 {
-                    ActivePhase = 4;
-                    ActivateNextPhase(ActivePhase);
-                    ResizeCamera();
+                    //Advance to Win Screen
+                    SceneManager.LoadScene("GameWin");
                 }
-                break;
-
-            case 5:
-                //Advance to Win Screen
-                SceneManager.LoadScene("GameWin");
                 break;
 
             default:
@@ -193,13 +187,12 @@ public class BossFight : MonoBehaviour
 
     void ActivateNextPhase(int activePhase)
     {
-        for(int i = 0; i < Phases[activePhase].Count; i++)
+        for (int i = 0; i < Phases[activePhase].Count; i++)
         {
-            if(Phases[activePhase][i] != null)
-            {
+            if (Phases[activePhase][i] != null)
                 Phases[activePhase][i].SetActive(true);
-            }
         }
+    
     }
 
     void ResizeCamera()
